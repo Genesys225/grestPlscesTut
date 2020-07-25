@@ -1,4 +1,5 @@
 import React, { useReducer } from 'react';
+import { BeInputProps } from '../common/BeInput';
 
 export interface FormState {
 	inputValues: {
@@ -47,8 +48,31 @@ const formReducer = (state: FormState, action: FormActions): FormState => {
 };
 
 export function useFormReducer(
-	initialState: FormState
-): [FormState, React.Dispatch<FormActions>] {
+	inputFields: Omit<BeInputProps, 'onInput'>[],
+	initialValidity: boolean
+): [FormState, React.Dispatch<FormActions>, FormState] {
+	const initialState = inputFields.reduce(
+		(initialState, field) => {
+			const { name, initialValue, initialValidity } = field;
+			return {
+				inputValues: {
+					...initialState.inputValues,
+					[name]: initialValue || '',
+				},
+				inputValidities: {
+					...initialState.inputValidities,
+					[name]:
+						initialValidity === undefined ? true : initialValidity,
+				},
+				formIsValid: initialState.formIsValid,
+			};
+		},
+		{
+			inputValues: {},
+			inputValidities: {},
+			formIsValid: initialValidity,
+		}
+	);
 	const [formState, formDispatch] = useReducer(formReducer, initialState);
-	return [formState, formDispatch];
+	return [formState, formDispatch, initialState];
 }

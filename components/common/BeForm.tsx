@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import BeInput, { BeInputProps } from './BeInput';
 import MainButton from './MainButton';
-import { useFormReducer, FormState } from '../hooks/useFormReducer';
+import { useFormReducer } from '../hooks/useFormReducer';
 
 type OnSubmit = (formValues: { [name: string]: string | number }) => any;
 type OnError = (formValues: { [name: string]: boolean }) => any;
@@ -48,32 +48,11 @@ const BeForm = (props: BeFormProps) => {
 			return field;
 		}
 	});
-	const initialState = inputFields.reduce(
-		(initialState, field) => {
-			const { name, initialValue, initialValidity } = field;
-			return {
-				inputValues: {
-					...initialState.inputValues,
-					[name]: initialValue || '',
-				},
-				inputValidities: {
-					...initialState.inputValidities,
-					[name]:
-						initialValidity === undefined ? true : initialValidity,
-				},
-				formIsValid: initialState.formIsValid,
-			};
-		},
-		{
-			inputValues: {},
-			inputValidities: {},
-			formIsValid:
-				props.initialValidity === undefined
-					? true
-					: props.initialValidity,
-		}
+
+	const [formState, formDispatch, initialState] = useFormReducer(
+		inputFields,
+		props.initialValidity === undefined ? true : props.initialValidity
 	);
-	const [formState, formDispatch] = useFormReducer(initialState);
 
 	const submitHandler = useCallback(() => {
 		if (formState.formIsValid) {
