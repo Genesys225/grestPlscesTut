@@ -3,7 +3,7 @@ import React from 'react';
 
 import { NavigationContainer } from '@react-navigation/native';
 
-import { createStackNavigator, HeaderTitle } from '@react-navigation/stack';
+import { createStackNavigator } from '@react-navigation/stack';
 import PlacesListScreen from '../components/screens/PlacesListScreen';
 import PlaceDetailScreen from '../components/screens/PlaceDetailScreen';
 import MapScreen from '../components/screens/MapScreen';
@@ -11,7 +11,9 @@ import NewPlaceScreen from '../components/screens/NewPlaceScreen';
 import Colors from '../config/colors';
 import { Platform, StyleSheet } from 'react-native';
 import MainButton, { MainButtonProps } from '../components/common/MainButton';
-const Stack = createStackNavigator();
+import { RootStackParamList } from './RootStackParamList';
+
+const Stack = createStackNavigator<RootStackParamList>();
 
 const headerButtonDefaultProps: MainButtonProps = {
 	color: Platform.OS === 'android' ? Colors.primary : 'white',
@@ -55,6 +57,9 @@ function PlacesNavigator() {
 				/>
 				<Stack.Screen
 					name="PlaceDetails"
+					options={({ navigation, route }) => ({
+						headerTitle: route.params.placeTitle,
+					})}
 					component={PlaceDetailScreen}
 				/>
 				<Stack.Screen name="Map" component={MapScreen} />

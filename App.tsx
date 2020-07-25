@@ -5,7 +5,7 @@ import PlacesNavigator from './navigation/PlacesNavigator';
 import { AppLoading } from 'expo';
 import * as Font from 'expo-font';
 import { Provider } from 'react-redux';
-import configureStore from './store/configureStore';
+import store from './store/configureStore';
 
 const fetchFonts = () => {
 	return Font.loadAsync({
@@ -27,7 +27,7 @@ export default function App() {
 		);
 	}
 	return (
-		<Provider store={configureStore()}>
+		<Provider store={store}>
 			<PlacesNavigator />
 		</Provider>
 	);

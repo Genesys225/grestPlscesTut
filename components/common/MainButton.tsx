@@ -2,7 +2,6 @@ import React, { ReactNode } from 'react';
 import {
 	StyleSheet,
 	Text,
-	View,
 	ViewStyle,
 	TouchableOpacity,
 	TouchableHighlight,
@@ -63,29 +62,38 @@ const MainButton = (props: MainButtonProps) => {
 		delete filteredProps.onPress;
 	}
 
-	const StaticChildren = (
-		<View style={{ ...styles.button, ...style }}>{dynamicChildren}</View>
-	);
 	const feedbackType =
 		props.feedbackType === undefined ? 'opacity' : props.feedbackType;
 	switch (feedbackType) {
 		case 'ripple':
 			return (
-				<Ripple rippleCentered={true} {...filteredProps}>
-					{StaticChildren}
+				<Ripple
+					rippleCentered={true}
+					{...filteredProps}
+					style={{ ...styles.button, ...style }}
+				>
+					{dynamicChildren}
 				</Ripple>
 			);
 		case 'highlight':
 			return (
-				<TouchableHighlight highlightColor="white" {...filteredProps}>
-					{StaticChildren}
+				<TouchableHighlight
+					style={{ ...styles.button, ...style }}
+					highlightColor="white"
+					{...filteredProps}
+				>
+					{dynamicChildren}
 				</TouchableHighlight>
 			);
 
 		default:
 			return (
-				<TouchableOpacity activeOpacity={0.6} {...filteredProps}>
-					{StaticChildren}
+				<TouchableOpacity
+					style={{ ...styles.button, ...style }}
+					activeOpacity={0.6}
+					{...filteredProps}
+				>
+					{dynamicChildren}
 				</TouchableOpacity>
 			);
 	}

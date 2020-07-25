@@ -10,7 +10,8 @@ import BeInput, { BeInputProps } from './BeInput';
 import MainButton from './MainButton';
 import { useFormReducer, FormState } from '../hooks/useFormReducer';
 
-type OnSubmit = (formState: FormState) => any;
+type OnSubmit = (formValues: { [name: string]: string | number }) => any;
+type OnError = (formValues: { [name: string]: boolean }) => any;
 
 type BeFormProps = {
 	inputFields: (BeInputProps | string)[];
@@ -24,6 +25,7 @@ type BeFormProps = {
 		clearStyle?: ViewStyle;
 	};
 	onSubmit: OnSubmit;
+	onError?: OnError;
 };
 
 const BeForm = (props: BeFormProps) => {
@@ -75,9 +77,9 @@ const BeForm = (props: BeFormProps) => {
 
 	const submitHandler = useCallback(() => {
 		if (formState.formIsValid) {
-			return props.onSubmit(formState);
+			return props.onSubmit(formState.inputValues);
 		} else {
-			return false;
+			return props.onError && props.onError(formState.inputValidities);
 		}
 	}, [formState]);
 
