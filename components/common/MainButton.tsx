@@ -41,6 +41,7 @@ const MainButton = (props: MainButtonProps) => {
 		title,
 		children,
 		color,
+		style: _style,
 		feedbackType: _feedbackType,
 		...filteredProps
 	} = props;
@@ -53,7 +54,7 @@ const MainButton = (props: MainButtonProps) => {
 		<Text style={{ ...styles.btnText, ...props.textStyle }}>{title}</Text>
 	);
 
-	let style = props.style;
+	let style = props.style === undefined ? {} : props.style;
 	if (color) {
 		style = { ...style, backgroundColor: color };
 	}

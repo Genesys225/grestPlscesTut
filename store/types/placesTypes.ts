@@ -4,7 +4,10 @@ export const ADD_PLACE = 'ADD_PLACE';
 
 export type AddPlaceAction = {
 	type: 'ADD_PLACE';
-	payload: { title: string };
+	payload: {
+		title: string;
+		imageUri: string;
+	};
 };
 
 export type PlacesState = {

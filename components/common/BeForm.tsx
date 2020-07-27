@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, ReactNode } from 'react';
 import {
 	StyleSheet,
 	ScrollView,
@@ -14,6 +14,7 @@ type OnSubmit = (formValues: { [name: string]: string | number }) => any;
 type OnError = (formValues: { [name: string]: boolean }) => any;
 
 type BeFormProps = {
+	children?: ReactNode;
 	inputFields: (BeInputProps | string)[];
 	confirmText?: string;
 	clearText?: string;
@@ -103,6 +104,7 @@ const BeForm = (props: BeFormProps) => {
 					);
 				})}
 				<View>
+					{props.children && props.children}
 					<MainButton title={confirmText} onPress={submitHandler} />
 					{props.clearText && (
 						<MainButton

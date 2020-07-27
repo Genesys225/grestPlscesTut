@@ -7,7 +7,7 @@ import BeText from '../common/BeText';
 
 interface PlaceItem extends Place {
 	onSelect: () => any;
-	image: string;
+	imageUri: string;
 	address: string;
 }
 
@@ -18,7 +18,10 @@ const PlaceItem: ListRenderItem<PlaceItem> = (itemData) => {
 			onPress={itemData.item.onSelect}
 			feedbackType="ripple"
 		>
-			<Image style={styles.img} source={{ uri: itemData.item.image }} />
+			<Image
+				style={styles.img}
+				source={{ uri: itemData.item.imageUri }}
+			/>
 			<View style={styles.cardBody}>
 				<BeText style={styles.title}>{itemData.item.title}</BeText>
 				<BeText style={styles.address}>{itemData.item.address}</BeText>
