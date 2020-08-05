@@ -16,9 +16,12 @@ export const placesReducer = (
 				places: [
 					...state.places,
 					new Place(
-						new Date().toString(),
+						action.payload.id,
 						action.payload.title,
-						action.payload.imageUri
+						action.payload.imageUri,
+						action.payload.address,
+						action.payload.lng,
+						action.payload.lat
 					),
 				],
 			};

@@ -13,17 +13,16 @@ const PlacesListScreen = () => {
 	return (
 		<FlatList
 			data={places}
-			renderItem={(item) => (
+			renderItem={(itemData) => (
 				<PlaceItem
-					{...item}
+					{...itemData}
 					item={{
-						...item.item,
-						image: 'null',
+						...itemData.item,
 						address: 'null',
 						onSelect: () =>
 							navigation.navigate('PlaceDetails', {
-								placeTitle: item.item.title,
-								placeId: item.item.id,
+								placeTitle: itemData.item.title,
+								placeId: itemData.item.id,
 							}),
 					}}
 				/>

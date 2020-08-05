@@ -5,6 +5,7 @@ export const ADD_PLACE = 'ADD_PLACE';
 export type AddPlaceAction = {
 	type: 'ADD_PLACE';
 	payload: {
+		id: string;
 		title: string;
 		imageUri: string;
 	};
