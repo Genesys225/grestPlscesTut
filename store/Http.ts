@@ -63,7 +63,6 @@ export class Http {
 
 	public patch(url: string, body: ReqBody, getParamsObj: GetParamsObj = {}) {
 		url = this.urlHelper(url, getParamsObj);
-		console.log(url);
 		return this.handleRequest(url, this.patchOrPost('PATCH', body));
 	}
 

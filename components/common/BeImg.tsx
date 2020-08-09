@@ -14,7 +14,6 @@ interface BeImgProps extends Omit<ImageProps, 'style'> {
 
 const BeImg = (props: BeImgProps) => {
 	const propStyles = props.style;
-	console.log(props.source);
 	return (
 		<View style={{ ...styles.imageContainer, ...propStyles }}>
 			<Image {...props} style={styles.image} />

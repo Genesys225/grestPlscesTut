@@ -4,7 +4,6 @@ import PlacesNavigator from './navigation/PlacesNavigator';
 import { useFonts } from 'expo-font';
 import { Provider } from 'react-redux';
 import store from './store/configureStore';
-
 export default function App() {
 	const [loaded] = useFonts({
 		'open-sans': require('./assets/fonts/OpenSans-Regular.ttf'),

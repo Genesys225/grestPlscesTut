@@ -1,18 +1,20 @@
 import Place from '../../models/place';
 
 export const ADD_PLACE = 'ADD_PLACE';
+export const HYDRATE_PLACE = 'HYDRATE_PLACE';
 
 export type AddPlaceAction = {
 	type: 'ADD_PLACE';
-	payload: {
-		id: string;
-		title: string;
-		imageUri: string;
-	};
+	payload: Place;
+};
+
+export type HydratePlacesAction = {
+	type: 'HYDRATE_PLACE';
+	places: Place[];
 };
 
 export type PlacesState = {
 	places: Place[];
 };
 
-export type PlacesActions = AddPlaceAction;
+export type PlacesActions = AddPlaceAction | HydratePlacesAction;
