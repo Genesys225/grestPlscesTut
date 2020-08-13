@@ -48,7 +48,6 @@ export class DB {
 		if (this._select) this.query = this._select;
 		if (this._where && this._select)
 			this.query = `${this.query} ${this._where}`;
-		console.log(this.query);
 		return new Promise((res, rej) => {
 			this.inst.transaction((tx) => {
 				tx.executeSql(
@@ -86,9 +85,9 @@ export class DB {
 			this._select = 'SELECT * FROM ' + this.tableName;
 			args = [];
 		} else
-			this._select = `SELECT ${'?,'.repeat(args.length - 1)}? FROM ${
-				this.tableName
-			}`;
+			this._select = `SELECT ${
+				args.length > 0 ? '?,'.repeat(args.length - 1) : ''
+			}? FROM ${this.tableName}`;
 		this.args = args;
 	}
 

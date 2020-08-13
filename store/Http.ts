@@ -74,7 +74,7 @@ export class Http {
 		});
 	}
 
-	private urlHelper(url: string, getParamsObj: GetParamsObj = {}) {
+	public urlHelper(url: string, getParamsObj: GetParamsObj = {}) {
 		url = url.match(/^http/) ? url : this._baseUrl + url;
 		const params = { ...this._baseParams, ...getParamsObj };
 		const paramsKeys = Object.keys(params);

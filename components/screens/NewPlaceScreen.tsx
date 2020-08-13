@@ -6,6 +6,7 @@ import { addPlace } from '../../store/actions/places';
 import { useNavigation } from '@react-navigation/native';
 import { AddPlaceScreenNavigationProp } from '../../navigation/RootStackParamList';
 import BeImageInput from '../common/BeImageInput';
+import LocationInput from '../common/LocationInput';
 
 const NewPlaceScreen = () => {
 	const [image, setImage] = useState<string>();
@@ -22,6 +23,7 @@ const NewPlaceScreen = () => {
 			confirmText="NEW PLACE"
 		>
 			<BeImageInput onImagePicked={setImage} />
+			<LocationInput onLocationPicked={() => {}} />
 		</BeForm>
 	);
 };

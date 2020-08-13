@@ -46,9 +46,7 @@ type HydratePlacesActionCreator = () => ThunkAction<
 
 export const hydratePlaces: HydratePlacesActionCreator = () => {
 	return async (dispatch) => {
-		const storedPlaces = await places
-			.where(['id', '>', 0], ['title', 'LIKE', '%d%'])
-			.get();
+		const storedPlaces = await places.get();
 		if (storedPlaces && storedPlaces.rows && storedPlaces.rows.length > 0)
 			try {
 				const storedPlacesArr: any[] = [];
