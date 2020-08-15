@@ -54,6 +54,7 @@ const BeImageInput = (props: BeImageInputProps) => {
 			)}
 			<MainButton
 				style={styles.button}
+				textStyle={styles.buttonText}
 				title="Take Image"
 				onPress={takeImageHandler}
 			/>
@@ -75,6 +76,9 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		borderColor: '#ccc',
 		borderWidth: 1,
+	},
+	buttonText: {
+		fontSize: 16,
 	},
 	button: {
 		width: '100%',

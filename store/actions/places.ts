@@ -46,6 +46,7 @@ type HydratePlacesActionCreator = () => ThunkAction<
 
 export const hydratePlaces: HydratePlacesActionCreator = () => {
 	return async (dispatch) => {
+		console.log(await places.init());
 		const storedPlaces = await places.get();
 		if (storedPlaces && storedPlaces.rows && storedPlaces.rows.length > 0)
 			try {

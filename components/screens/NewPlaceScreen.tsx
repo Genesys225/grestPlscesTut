@@ -21,6 +21,7 @@ const NewPlaceScreen = () => {
 			inputFields={['title']}
 			onSubmit={savePlaceHandler}
 			confirmText="NEW PLACE"
+			actionsTextStyle={styles.submitTextStyle}
 		>
 			<BeImageInput onImagePicked={setImage} />
 			<LocationInput onLocationPicked={() => {}} />
@@ -30,4 +31,8 @@ const NewPlaceScreen = () => {
 
 export default NewPlaceScreen;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+	submitTextStyle: {
+		fontSize: 16,
+	},
+});

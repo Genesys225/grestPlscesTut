@@ -12,17 +12,9 @@ import Colors from '../config/colors';
 import { Platform, StyleSheet } from 'react-native';
 import MainButton, { MainButtonProps } from '../components/common/MainButton';
 import { RootStackParamList } from './RootStackParamList';
+import { headerButtonDefaultProps } from './headerButtonsDefaultProps';
 
 const Stack = createStackNavigator<RootStackParamList>();
-
-const headerButtonDefaultProps: MainButtonProps = {
-	color: Platform.OS === 'android' ? Colors.primary : 'white',
-	iconSize: 23,
-	iconColor: Platform.OS === 'android' ? 'white' : Colors.primary,
-	feedbackType: 'ripple',
-	rippleSize: 55,
-	rippleOpacity: 0.5,
-};
 
 function PlacesNavigator() {
 	return (

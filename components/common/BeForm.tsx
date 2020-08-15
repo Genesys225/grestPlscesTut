@@ -5,6 +5,7 @@ import {
 	KeyboardAvoidingView,
 	View,
 	ViewStyle,
+	TextStyle,
 } from 'react-native';
 import BeInput, { BeInputProps } from './BeInput';
 import MainButton from './MainButton';
@@ -18,6 +19,9 @@ type BeFormProps = {
 	inputFields: (BeInputProps | string)[];
 	confirmText?: string;
 	clearText?: string;
+	confirmTextStyle?: TextStyle;
+	clearTextStyle?: TextStyle;
+	actionsTextStyle?: TextStyle;
 	initialValidity?: boolean;
 	style?: ViewStyle;
 	actionContainer?: {
@@ -83,11 +87,20 @@ const BeForm = (props: BeFormProps) => {
 	const confirmText =
 		props.confirmText === undefined ? 'Submit' : props.confirmText;
 
+	const confirmTextStyle = {
+		...props.actionsTextStyle,
+		...props.confirmTextStyle,
+	};
+	const clearTextStyle = {
+		...props.actionsTextStyle,
+		...props.clearTextStyle,
+	};
+
 	return (
 		<KeyboardAvoidingView
 			style={styles.kbAvoid}
 			behavior="height"
-			keyboardVerticalOffset={100}
+			keyboardVerticalOffset={85}
 		>
 			<ScrollView style={{ ...styles.form, ...props.style }}>
 				{inputFields.map((field) => {
@@ -103,13 +116,18 @@ const BeForm = (props: BeFormProps) => {
 						/>
 					);
 				})}
-				<View>
+				<View style={{ marginBottom: 10 }}>
 					{props.children && props.children}
-					<MainButton title={confirmText} onPress={submitHandler} />
+					<MainButton
+						title={confirmText}
+						onPress={submitHandler}
+						textStyle={clearTextStyle}
+					/>
 					{props.clearText && (
 						<MainButton
 							title={confirmText}
 							onPress={clearFormHandler}
+							textStyle={confirmTextStyle}
 						/>
 					)}
 				</View>
@@ -121,7 +139,8 @@ export default BeForm;
 
 const styles = StyleSheet.create({
 	form: {
-		margin: 30,
+		marginHorizontal: 30,
+		marginTop: 30,
 	},
 	kbAvoid: {
 		flex: 1,

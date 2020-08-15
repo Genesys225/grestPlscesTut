@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { StyleSheet, View, Alert } from 'react-native';
+import { StyleSheet, View, Alert, ActivityIndicator } from 'react-native';
 import BeText from './BeText';
 import BeImg from './BeImg';
 import MainButton from './MainButton';
@@ -7,12 +7,15 @@ import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
 
 import { gMaps } from '../../config/http';
-
+import Ripple from 'react-native-material-ripple';
+import { useNavigation } from '@react-navigation/native';
+import { AddPlaceScreenNavigationProp } from '../../navigation/RootStackParamList';
 type LocationInputProps = {
 	onLocationPicked: Function;
 };
 
 const LocationInput = (props: LocationInputProps) => {
+	const navigation = useNavigation<AddPlaceScreenNavigationProp>();
 	const [isFetching, setIsFetching] = useState(false);
 	const [pickedLocation, setPickedLocation] = useState<{
 		lat: number;
@@ -47,13 +50,6 @@ const LocationInput = (props: LocationInputProps) => {
 				lat: location.coords.latitude,
 				lng: location.coords.longitude,
 			});
-			console.log(
-				gMaps.urlHelper('', {
-					center: `${location.coords.longitude},${location.coords.latitude}`,
-					zoom: 14,
-					size: '400x200',
-				})
-			);
 		} catch (error) {
 			console.log(error);
 			Alert.alert(
@@ -63,6 +59,10 @@ const LocationInput = (props: LocationInputProps) => {
 			);
 		}
 		setIsFetching(false);
+	};
+
+	const pickOnMapHandler = () => {
+		navigation.navigate('Map', {});
 	};
 
 	const mapImageUrl = useMemo(
@@ -85,23 +85,39 @@ const LocationInput = (props: LocationInputProps) => {
 
 	return (
 		<View style={styles.imagePicker}>
-			{!pickedLocation ? (
+			{!pickedLocation && !isFetching ? (
 				<BeText containerStyle={styles.imagePreview}>
 					No Location
 				</BeText>
+			) : isFetching ? (
+				<ActivityIndicator size="large" style={styles.imagePreview} />
 			) : (
-				<BeImg
-					style={styles.imagePreview}
-					source={{
-						uri: mapImageUrl(),
-					}}
-				/>
+				<Ripple
+					onPress={pickOnMapHandler}
+					style={styles.imgFeedbackContainer}
+				>
+					<BeImg
+						style={styles.imagePreview}
+						source={{
+							uri: mapImageUrl(),
+						}}
+					/>
+				</Ripple>
 			)}
-			<MainButton
-				style={styles.button}
-				title="Take Location"
-				onPress={pickLocationHandler}
-			/>
+			<View style={styles.buttonsContainer}>
+				<MainButton
+					style={styles.button}
+					title="Take Location"
+					textStyle={styles.buttonText}
+					onPress={pickLocationHandler}
+				/>
+				<MainButton
+					style={styles.button}
+					title="Pick on  Map"
+					onPress={pickOnMapHandler}
+					textStyle={styles.buttonText}
+				/>
+			</View>
 		</View>
 	);
 };
@@ -114,15 +130,24 @@ const styles = StyleSheet.create({
 	},
 	imagePreview: {
 		width: '100%',
-		height: 200,
+		height: 170,
 		marginBottom: 10,
 		justifyContent: 'center',
 		alignItems: 'center',
 		borderColor: '#ccc',
 		borderWidth: 1,
 	},
+	imgFeedbackContainer: { width: '100%' },
 	button: {
-		width: '100%',
 		marginVertical: 10,
+	},
+	buttonText: {
+		fontSize: 16,
+	},
+	buttonsContainer: {
+		flexDirection: 'row',
+		flexWrap: 'wrap',
+		width: '100%',
+		justifyContent: 'space-between',
 	},
 });
