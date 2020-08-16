@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import { StyleSheet, Platform } from 'react-native';
 import MapView, { MapEvent, Marker, LatLng } from 'react-native-maps';
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -10,17 +10,31 @@ import MainButton from '../common/MainButton';
 import { headerButtonDefaultProps } from '../../navigation/headerButtonsDefaultProps';
 
 const MapScreen = () => {
+	const route = useRoute<MapScreenRouteProp>();
+
+	const gpsPickedLocation = useMemo(
+		() => (route.params ? route.params.pickedLocation : undefined),
+		[]
+	);
+
 	const mapRegion = {
-		latitude: 37.78,
-		longitude: -122.43,
+		latitude: gpsPickedLocation ? gpsPickedLocation.latitude : 37.78,
+		longitude: gpsPickedLocation ? gpsPickedLocation.longitude : -122.43,
 		latitudeDelta: 0.0922,
 		longitudeDelta: 0.0421,
 	};
+
 	const [selectedLocation, setSelectedLocation] = useState<LatLng>({
 		latitude: mapRegion.latitude,
 		longitude: mapRegion.longitude,
 	});
+
 	const navigation = useNavigation<MapScreenNavigationProp>();
+
+	const pickMarkedLocationHandler = useCallback(() => {
+		if (!selectedLocation) return;
+		navigation.navigate('AddPlace', { pickedLocation: selectedLocation });
+	}, [selectedLocation]);
 
 	navigation.setOptions({
 		headerRight: () => (
@@ -33,20 +47,19 @@ const MapScreen = () => {
 		),
 	});
 
+	useEffect(() => {
+		if (gpsPickedLocation) setSelectedLocation(gpsPickedLocation);
+	}, [gpsPickedLocation]);
+
 	const selectLocationHandler = (event: MapEvent<{}>) => {
 		setSelectedLocation(event.nativeEvent.coordinate);
 	};
 
-	const pickMarkedLocationHandler = useCallback(() => {
-		if (!selectedLocation) return;
-		navigation.navigate('AddPlace', { pickedLocation: selectedLocation });
-	}, [selectedLocation]);
-
 	return (
 		<MapView
-			onPress={selectLocationHandler}
 			style={styles.map}
 			region={mapRegion}
+			onPress={selectLocationHandler}
 		>
 			<Marker title="Picked Location" coordinate={selectedLocation} />
 		</MapView>

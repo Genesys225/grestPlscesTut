@@ -7,7 +7,7 @@ export const auth = new Http(
 	{ key: 'AIzaSyC02szWokwYWTZzi-_T7tDmm1rv0et9hv4' }
 );
 export const gMaps = new Http(
-	'https://maps.googleapis.com/maps/api/staticmap',
+	'https://maps.googleapis.com/maps/api/',
 	{},
 	{
 		key: 'AIzaSyA379Koq42vtNAgy73hyNhgbKKIlCTamYM',

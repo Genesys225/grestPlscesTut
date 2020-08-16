@@ -1,3 +1,5 @@
+import { gMaps } from './../../config/http';
+import { LatLng } from 'react-native-maps';
 import { places } from './../../models/baseEntity/places';
 import { HYDRATE_PLACE } from './../types/placesTypes';
 import { RootState } from './../configureStore';
@@ -7,10 +9,12 @@ import * as fs from 'expo-file-system';
 import Place from '../../models/place';
 type AddPlaceActionCreator = (
 	title: string,
-	imageUri: string
+	imageUri: string,
+	lat: number,
+	lng: number
 ) => ThunkAction<Promise<void>, RootState, {}, PlacesActions>;
 
-export const addPlace: AddPlaceActionCreator = (title, imageUri) => {
+export const addPlace: AddPlaceActionCreator = (title, imageUri, lat, lng) => {
 	return async (dispatch) => {
 		imageUri = !!imageUri ? imageUri : 'null';
 		const fileName = imageUri.split('/').pop();
@@ -18,15 +22,17 @@ export const addPlace: AddPlaceActionCreator = (title, imageUri) => {
 		const newPath = (!!documentsPath ? documentsPath : 'null') + fileName;
 		try {
 			await fs.moveAsync({ from: imageUri, to: newPath });
+			const addressObj = await gMaps.get('geocode/json', {
+				latlng: `${lat},${lng}`,
+			});
 			const payload = {
 				imageUri: newPath,
 				title,
-				address: 'sadfsad',
-				lat: '564833',
-				lng: '564654',
+				address: addressObj.results[0].formatted_address,
+				lat,
+				lng,
 			};
 			const result = await places.insertPlace(payload);
-			console.log(result);
 			dispatch({
 				type: ADD_PLACE,
 				payload: { ...payload, id: result.insertId.toString() },
@@ -46,7 +52,6 @@ type HydratePlacesActionCreator = () => ThunkAction<
 
 export const hydratePlaces: HydratePlacesActionCreator = () => {
 	return async (dispatch) => {
-		console.log(await places.init());
 		const storedPlaces = await places.get();
 		if (storedPlaces && storedPlaces.rows && storedPlaces.rows.length > 0)
 			try {

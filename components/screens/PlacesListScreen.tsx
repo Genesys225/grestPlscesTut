@@ -25,7 +25,6 @@ const PlacesListScreen = () => {
 					{...itemData}
 					item={{
 						...itemData.item,
-						address: 'null',
 						onSelect: () =>
 							navigation.navigate('PlaceDetails', {
 								placeTitle: itemData.item.title,

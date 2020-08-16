@@ -5,7 +5,7 @@ import { LatLng } from 'react-native-maps';
 export type RootStackParamList = {
 	Places: undefined;
 	PlaceDetails: { placeTitle: string; placeId: string };
-	Map: { saveLocation?: (event: GestureResponderEvent) => void };
+	Map: { pickedLocation?: LatLng };
 	AddPlace: { pickedLocation?: LatLng };
 };
 

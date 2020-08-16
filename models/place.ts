@@ -3,15 +3,15 @@ export default class Place {
 	id: string;
 	imageUri: any;
 	address: string;
-	lat: string;
-	lng: string;
+	lat: number;
+	lng: number;
 	constructor(
 		id: string,
 		title: string,
 		imageUri: string,
 		address: string,
-		lat: string,
-		lng: string
+		lat: number,
+		lng: number
 	) {
 		this.title = title;
 		this.imageUri = imageUri;

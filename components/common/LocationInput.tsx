@@ -1,26 +1,43 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { StyleSheet, View, Alert, ActivityIndicator } from 'react-native';
 import BeText from './BeText';
 import BeImg from './BeImg';
 import MainButton from './MainButton';
 import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
+import { LatLng } from 'react-native-maps';
 
 import { gMaps } from '../../config/http';
 import Ripple from 'react-native-material-ripple';
-import { useNavigation } from '@react-navigation/native';
-import { AddPlaceScreenNavigationProp } from '../../navigation/RootStackParamList';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import {
+	AddPlaceScreenNavigationProp,
+	AddPlaceScreenRouteProp,
+} from '../../navigation/RootStackParamList';
 type LocationInputProps = {
 	onLocationPicked: Function;
 };
 
 const LocationInput = (props: LocationInputProps) => {
 	const navigation = useNavigation<AddPlaceScreenNavigationProp>();
+	const route = useRoute<AddPlaceScreenRouteProp>();
 	const [isFetching, setIsFetching] = useState(false);
-	const [pickedLocation, setPickedLocation] = useState<{
-		lat: number;
-		lng: number;
-	}>();
+	const [pickedLocation, setPickedLocation] = useState<LatLng | undefined>();
+
+	const mapPickedLocation = useMemo(
+		() => (route.params ? route.params.pickedLocation : undefined),
+		[route]
+	);
+
+	const { onLocationPicked } = props;
+
+	useEffect(() => {
+		if (mapPickedLocation) {
+			onLocationPicked(mapPickedLocation);
+			setPickedLocation(mapPickedLocation);
+		}
+	}, [mapPickedLocation, onLocationPicked]);
+
 	const verifyPermission = async () => {
 		const permit = await Permissions.askAsync(Permissions.LOCATION);
 		if (permit.status !== 'granted') {
@@ -45,13 +62,9 @@ const LocationInput = (props: LocationInputProps) => {
 				timeout: 5000,
 				enableHighAccuracy: true,
 			});
-			console.log(location);
-			setPickedLocation({
-				lat: location.coords.latitude,
-				lng: location.coords.longitude,
-			});
+			setPickedLocation(location.coords);
+			props.onLocationPicked(location.coords);
 		} catch (error) {
-			console.log(error);
 			Alert.alert(
 				'Could not get your location',
 				'Please try again later or pick a location on the map.',
@@ -62,25 +75,21 @@ const LocationInput = (props: LocationInputProps) => {
 	};
 
 	const pickOnMapHandler = () => {
-		navigation.navigate('Map', {});
+		navigation.navigate('Map', pickedLocation ? { pickedLocation } : {});
 	};
 
 	const mapImageUrl = useMemo(
 		() =>
-			function() {
-				const result = pickedLocation
-					? gMaps.urlHelper('', {
-							center: `${pickedLocation.lat},${pickedLocation.lng}`,
-							zoom: 14,
-							size: '400x200',
-							mapType: 'roadmap',
-							markers: `color:red|label:A|${pickedLocation.lat},${pickedLocation.lng}`,
-					  })
-					: '';
-				console.log(result);
-				return result;
-			},
-		[pickedLocation]
+			pickedLocation
+				? gMaps.urlHelper('staticmap', {
+						center: `${pickedLocation.latitude},${pickedLocation.longitude}`,
+						zoom: 14,
+						size: '400x200',
+						mapType: 'roadmap',
+						markers: `color:red|label:A|${pickedLocation.latitude},${pickedLocation.longitude}`,
+				  })
+				: '',
+		[pickedLocation, gMaps]
 	);
 
 	return (
@@ -98,9 +107,7 @@ const LocationInput = (props: LocationInputProps) => {
 				>
 					<BeImg
 						style={styles.imagePreview}
-						source={{
-							uri: mapImageUrl(),
-						}}
+						source={{ uri: mapImageUrl }}
 					/>
 				</Ripple>
 			)}
